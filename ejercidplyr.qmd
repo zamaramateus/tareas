@@ -1,0 +1,258 @@
+---
+title: "Ejercicios dpylr"
+author: "Marilyn Mateus"
+date: 8/04/2026
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme: cosmo
+    code-fold: false
+editor: visual
+---
+
+# Uso del paquete Dplyr
+
+## Se descarga el paquete
+
+ downloand.packes("dplyr")
+ downloand.packes("gapminder")
+
+## Se activa el paquete
+
+```{r}
+library(dplyr)
+library(gapminder)
+library(tidyr)
+```
+
+## Seleccionar
+
+Se seleccionan únicamente las columnas **country**, **year** y **lifeExp** del dataset utilizando la función `select()`.
+
+```{r}
+    gapminder %>%
+      select(country, year, lifeExp)
+```
+
+## Filtrar las observaciones del año 2007
+
+Se utiliza `filter()` para mostrar únicamente las observaciones correspondientes al año **2007**.
+
+```{r}
+gapminder %>%
+  filter(year == 2007)
+```
+
+## Filtrar los países del continente Asia
+
+Se filtran los datos para obtener únicamente los países cuyo continente es \*\*Asia\*
+
+```{r}
+    gapminder %>%
+      filter(continent == "Asia")
+```
+
+## Seleccionar filas donde lifeExp sea mayor que 70
+
+Este paso permite identificar los países y años donde la esperanza de vida (**lifeExp**) supera los 70 años.
+
+```{r}
+    gapminder %>%
+      filter(lifeExp > 70)
+```
+
+## Ordenar el dataset por lifeExp en orden ascendente
+
+Se usa `arrange()` para ordenar los datos desde la menor hasta la mayor esperanza de vida.
+
+```{r}
+    gapminder %>%
+      arrange(lifeExp)
+```
+
+## Ordenar el dataset por gdpPercap en orden descendente
+
+En este caso se utiliza `desc()` dentro de `arrange()` para ordenar los valores de **gdpPercap** de mayor a menor.
+
+```{r}
+    gapminder %>%
+      arrange(desc(gdpPercap))
+```
+
+## Crear una nueva columna llamada gdp_total
+
+Se utiliza `mutate()` para crear una nueva variable llamada **gdp_total**, que representa el PIB total calculado como **gdpPercap multiplicado por pop**.
+
+```{r}
+    gapminder %>%
+      mutate(gdp_total = gdpPercap * pop)
+```
+
+## Filtrar países con población mayor a 100 millones en 2007
+
+Se combinan dos condiciones dentro de `filter()` para obtener los países con población mayor a **100 millones** en el año **2007**.
+
+```{r}
+    gapminder %>%
+      filter(year == 2007, pop > 100000000)
+```
+
+## Seleccionar países de Europe y mostrar solo country y gdpPercap
+
+Primero se filtran los países del continente **Europe** y luego se seleccionan únicamente las columnas **country** y **gdpPercap**.
+
+```{r}
+    gapminder %>%
+      filter(continent == "Europe") %>%
+      select(country, gdpPercap)
+```
+
+## Calcular la esperanza de vida promedio por continente
+
+Se agrupan los datos por **continent** y se calcula la media de **lifeExp** usando `mean()`.
+
+```{r}
+    gapminder %>%
+      group_by(continent) %>%
+      summarise(avg_lifeExp = mean(lifeExp))
+```
+
+## Calcular el promedio de gdpPercap por continente y año
+
+Se agrupan los datos por **continent** y **year** para calcular el promedio de **gdpPercap**.
+
+```{r}
+    gapminder %>%
+      group_by(continent, year) %>%
+      summarise(avg_gdpPercap = mean(gdpPercap))
+```
+
+## Encontrar la esperanza de vida máxima por continente
+
+Se calcula el valor máximo de **lifeExp** dentro de cada continente usando `max()`.
+
+```{r}
+    gapminder %>%
+      group_by(continent) %>%
+      summarise(max_lifeExp = max(lifeExp))
+```
+
+## Contar cuántos países hay en cada continente
+
+Se utiliza `n_distinct()` para contar el número de países únicos en cada continente.
+
+```{r}
+    gapminder %>%
+      group_by(continent) %>%
+      summarise(n_countries = n_distinct(country))
+```
+
+## Calcular la población total por continente
+
+Se agrupan los datos por continente y se suma la variable **pop** usando `sum()`.
+
+```{r}
+    gapminder %>%
+      group_by(continent) %>%
+      summarise(total_pop = sum(pop))
+```
+
+## Analizar el promedio de esperanza de vida por año en Americas
+
+Se filtran los datos del continente **Americas** y luego se calcula la esperanza de vida promedio por **year**.
+
+```{r}
+    gapminder %>%
+      filter(continent == "Americas") %>%
+      group_by(year) %>%
+      summarise(avg_lifeExp = mean(lifeExp))
+```
+
+## Obtener los 10 países con mayor gdpPercap en 2007
+
+Se filtra el año **2007**, se ordena de mayor a menor **gdpPercap** y se seleccionan los **10 primeros países**.
+
+```{r}
+    gapminder %>%
+      filter(year == 2007) %>%
+      arrange(desc(gdpPercap)) %>%
+      slice_head(n = 10)
+```
+
+## Encontrar el país con mayor esperanza de vida en cada año
+
+Se agrupan los datos por **year** y se selecciona el país con mayor **lifeExp** usando `slice_max()`.
+
+```{r}
+gapminder %>%
+  group_by(year) %>%
+  slice_max(lifeExp, n = 1)
+```
+## Calcular la mediana de gdpPercap por continente
+
+Se calcula la **mediana** de **gdpPercap** para cada continente usando `median()`.
+
+```{r}
+gapminder %>%
+  group_by(continent) %>%
+  summarise(median_gdpPercap = median(gdpPercap))
+```
+## Calcular el cambio en lifeExp entre 1952 y 2007
+
+Se reorganizan los datos para tener ambos años en columnas usando `pivot_wider()` y luego se calcula la diferencia en **lifeExp**.
+
+```{r}
+    gapminder %>%
+      filter(year %in% c(1952, 2007)) %>%
+      select(country, year, lifeExp) %>%
+      pivot_wider(names_from = year, values_from = lifeExp) %>%
+      mutate(change_lifeExp = `2007` - `1952`)
+```
+
+## Identificar los 5 países con mayor aumento en gdpPercap
+
+Se calcula la diferencia en **gdpPercap** entre 1952 y 2007 y luego se ordena de mayor a menor para encontrar los 5 países con mayor crecimiento.
+
+```{r}
+    gapminder %>%
+      filter(year %in% c(1952, 2007)) %>%
+      select(country, year, gdpPercap) %>%
+      pivot_wider(names_from = year, values_from = gdpPercap) %>%
+      mutate(change_gdp = `2007` - `1952`) %>%
+      arrange(desc(change_gdp)) %>%
+      slice_head(n = 5)
+```
+
+# Desafío adicional
+
+En este ejercicio se combinan varias operaciones en un solo **pipeline**:
+
+1.  Filtrar los datos del año **2007**
+
+2.  Agrupar por **continent**
+
+3.  Calcular el promedio de **lifeExp**
+
+4.  Ordenar los resultados de mayor a menor
+
+
+<!-- -->
+
+```{r}
+gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarise(avg_lifeExp = mean(lifeExp)) %>%
+  arrange(desc(avg_lifeExp))
+```
+
+# Notas
+
+-   `n_distinct()` cuenta valores únicos.
+
+-   `slice_max()` permite seleccionar los valores más altos dentro de cada grupo.
+
+-   `pivot_wider()` reorganiza los datos para comparar valores entre columnas.
+
+-   El operador `%>%` permite encadenar múltiples operaciones de manera clara y organizada.
