@@ -1,0 +1,118 @@
+---
+title: "ejercicios gglopt2"
+author: "Marilyn Mateus"
+date: 26/03/2026
+institute: USTA
+format: html
+editor: visual
+
+---
+
+### ggplo2
+
+Usamos el paquete ggplot2 con el objetivo de explorar las diferentes funciones en Rstudio, analizando las diferentes variables, tipos de graficos y demas. Permitiendonos analizar todos los datos de forma clara, para conocer como estos actuan
+
+## activamos el paquete
+
+```{r}
+library(ggplot2)
+```
+
+ggplot2 nos permite crear, boxplots,gráficos, histogramas y demás en RStudio
+
+## Creamos una base de datos de un estudiante
+
+```{r}
+students <- data.frame(
+  id = 1:20,
+  hours_study = c(2,3,4,5,6,3,4,7,8,5,6,7,3,2,9,10,4,6,8,5),
+  score = c(50,55,65,70,75,60,66,80,85,72,74,78,58,52,90,95,67,76,88,73),
+  gender = rep(c("Male","Female"), 10),
+  major = rep(c("Engineering","Business","Arts","Science"), 5)
+)
+```
+ data.frame es una tabla de datos que nos da las variables que contiene el paquete
+ Podemos ver que:
+ Aumentan las horas de estudio, también tienden a aumentar las calificaciones. Esto sugiere una relación positiva entre el tiempo dedicado al estudio y el rendimiento académico.
+ 
+## Scatter 
+
+```{r}
+ggplot(students, aes(x = hours_study, y = score)) +
+  geom_point(size = 3, color = "blue") +
+  labs(
+    title = "Relación entre horas de estudio y puntaje",
+    x = "Horas de estudio",
+    y = "Puntaje"
+  ) +
+  theme_minimal()
+```
+Podemos observar si más horas de estudio se relacionan con mejores puntajes
+
+
+## Comparación por género
+
+```{r}
+ggplot(students, aes(hours_study, score, color = gender)) +
+  geom_point(size = 3) +
+  labs(
+    title = "Horas de estudio vs puntaje por género",
+    x = "Horas de estudio",
+    y = "Puntaje",
+    color = "Género"
+  ) +
+  theme_minimal()
+```
+Podemos comparar los grupos por las diferencias de genero y de color
+Se puede ver que ambos grupos siguen una tendencia similar: más horas de estudio se asocian con mejores calificaciones.
+
+## Scatter plot con línea de regresión
+
+Tendencia entre estudio y puntaje
+
+```{r}
+ggplot(students, aes(hours_study, score)) +
+  geom_point(size = 3, color = "darkorange") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  labs(
+    title = "Relación entre horas de estudio y puntaje",
+    x = "Horas de estudio",
+    y = "Puntaje"
+  ) +
+  theme_minimal()+
+  ggtitle("Tendencia entre estudio y puntaje")
+```
+
+geom_smooth(method = "lm")
+Esto agrega una regresión líneal, que nos muestra las tendencias de los datos.
+
+Si la línea sube → mayor estudio → mayor puntaje.
+
+La pendiente positiva de la línea indica que a medida que aumentan las horas de estudio, las calificaciones también tienden a aumentar.
+
+Esto refuerza la idea de que el tiempo dedicado al estudio tiene una influencia positiva en el rendimiento académico.
+
+## Boxplot
+Nos muestra los cuantiles, la mediana y los valores extremos, permitiendonos comparar las distribuciones entre los grupos
+
+```{r}
+ggplot(students, aes(gender, score, fill = gender)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Distribución de puntajes por género",
+    x = "Género",
+    y = "Puntaje"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")+
+  ggtitle("Comparación de puntajes por género")
+```
+
+## Histograma
+
+```{r}
+ggplot(students, aes(score)) +
+  geom_histogram(bins = 10)+
+  ggtitle("Histograma de notas") 
+```
+Nos muestra como estan distribuidas las notas
