@@ -1,0 +1,144 @@
+---
+title: "La Media y la Varianza"
+author: "Marilyn Mateus"
+date: 09/04/2026
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    code-overflow: wrap
+    code-copy: true
+    embed-resources: true
+    reference-location: margin
+
+lang: es
+---
+
+# La media y la varianza
+
+Podemos ver como se calcula la media, la intervarianza y la intravarianza, tanto en Rstudio y en fisico con una calculadora
+
+## PROPIEDADES
+
+Sean $a, b \in \mathbb{R}$ $X$ una variable constante
+
+1)  $M(a) = a$
+2)  $M(ax + b) = a M(X) + b$
+3)  $V(X) \ge 0$
+4)  $V(a) = 0$
+5)  $V(ax + b) = a^2 V(X)$ $V(X + b) = V(X)$
+
+Suponga que la edad promedio y la desviación estándar de las edades de un grupo de personas son respectivamente 22 años y 5 años. **¿Cuál era la media y la desviación estándar de las edades hace 6 años?**
+
+X: Edad (Años)
+
+$M(X - 6) = M(X) - 6 = 22 - 6 = 16 \text{ años}$
+
+$V(X - 6) = V(X) = 5^2 = 25 \text{ años}$
+
+$\sigma(X - 6) = \sigma(X) = 5 \text{ años}$
+
+# Notas
+
+| Mañana | Tarde | Noche |
+|--------|-------|-------|
+| 4.0    | 3.8   | 3.1   |
+| 3.5    | 3.5   | 2.5   |
+| 3.8    | 3.0   | 2.6   |
+| 3.6    | 2.9   |       |
+| 4.1    |       |       |
+```{r}
+# Notas jornada mañana
+mañana <- c(4.0, 3.5, 3.8, 3.6, 4.1)
+# Calculamos su media para poder usarla después
+media_mañana <- mean(mañana)
+
+# Notas jornada tarde
+tarde <- c(3.8, 3.5, 3.0, 2.9)
+media_tarde <- mean(tarde)
+
+# Notas jornada noche
+noche <- c(3.1, 2.5, 2.6)
+media_noche <- mean(noche)
+```
+**TAMAÑO** $n_1 = 5 \quad n_2 = 4 \quad n_3 = 3 \quad | \quad n = 12$
+
+**MEDIA** $\bar{X}_1 = 3,8 \quad \bar{X}_2 = 3.3 \quad \bar{X}_3 = 2,7\bar{3} \quad | \quad \bar{X}_T = 3,36\bar{6}$
+
+**VAR POS** $\sigma_1^2 = 0,052 \quad \sigma_2^2 = 0,135 \quad \sigma_3^2 = 0,068\bar{8} \quad | \quad \sigma_T^2 = 0,263\bar{8}$
+
+$$\bar{X}_T = \frac{3.8(5) + 3.3(4) + 2.7\bar{3}(3)}{12} = 3,36\bar{6}$$
+
+## Promedio de Jornadas
+
+
+```{r}
+# Varianza jornada mañana
+var_mañana <- var(mañana)
+
+# Varianza jornada tarde
+var_tarde <- var(tarde)
+
+# Varianza jornada noche
+var_noche <- var(noche)
+
+var_mañana
+var_tarde
+var_noche
+```
+
+A una Varianza mayor hay mayor dispersion en las calificaciones, mientras que con una varianza menor hay mayor uniformidad en las notas
+
+## **Varianza de las Medias**
+
+$\text{Intervarianza } \sigma_B^2$
+
+$$\frac{(3.8 - 3,36\bar{6})^2 5 + (3,3 - 3,36\bar{6})^2 4 + (2,7\bar{3} - 3,36\bar{6})^2 3}{12} = 0,18$$
+
+```{r}
+# Vector con las medias
+medias <- c(media_mañana,media_tarde,media_noche)
+
+# Cálculo intervarianza
+intervarianza <- var(medias)
+
+intervarianza
+```
+
+variación entre los grupos, muestra la diferencia entre los promedios y las jornadas jornadas.
+
+## **Varianza de las Varianzas**
+
+$\text{Intravarianza } \sigma_W^2$
+
+$$\frac{0,052(5) + 0,135(4) + 0,068\bar{8}(3)}{12} = 0,083\bar{8}$$
+
+```{r}
+# Vector con las varianzas
+varianzas <- c(var_mañana,var_tarde,var_noche)
+
+# Cálculo intravarianza
+intravarianza <- mean(varianzas)
+
+intravarianza
+```
+
+Variación entre los grupos, muestra la diferencia de notas en cada jornada Variación dentro de los grupos
+
+# En la calculadora
+
+usa el comando Mode SD -\> shift mode 1 y digita el primero dato, luego m+ y asi digita el los datos = para limpiar memorias y empezar de nuevo.
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
